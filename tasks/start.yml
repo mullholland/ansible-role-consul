@@ -1,0 +1,30 @@
+---
+- name: nomad API reachable?
+  ansible.builtin.uri:
+    url: "http://localhost:4646/v1/metrics"
+    method: GET
+    status_code: 200
+    body_format: json
+  register: check_result
+  retries: 6
+  until: check_result is succeeded
+  delay: 10
+  changed_when: false
+  when:
+    - nomad_server | bool
+
+- name: list server members
+  ansible.builtin.command:
+    cmd: nomad server members
+  register: nomad_list_server_members
+  changed_when: false
+  when:
+    - nomad_server | bool
+
+- name: join nomad leader
+  ansible.builtin.command:
+    cmd: nomad server join {{ nomad_leader }}:4648
+  register: nomad_join_nomad_leader
+  when:
+    - ansible_hostname != nomad_leader
+    - ansible_hostname not in nomad_list_server_members.stdout
