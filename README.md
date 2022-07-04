@@ -109,7 +109,7 @@ This example is taken from `molecule/default/converge.yml` and is tested on each
         config: |
           server = {{ consul_server | lower }}
           retry_join = ["{{ consul_bind_addr }}"]
-          bootstrap_expect = 3
+          bootstrap_expect = 1
       - name: logging
         config: |
           log_level            = "INFO"
