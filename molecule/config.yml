@@ -1,0 +1,28 @@
+---
+molecule_scenarios:
+  - scenario: "default"
+    ansible: ["previous", "current", "development"]
+    platforms:
+      - "debian10"
+      - "debian11"
+      - "ubuntu1804"
+      - "ubuntu2004"
+      - "ubuntu2204"
+      - "centos7"
+      - "centos-stream8"
+      - "amazonlinux"
+      - "rockylinux8"
+      - "almalinux8"
+  - scenario: "cluster"
+    ansible: ["previous", "current", "development"]
+    platforms:
+      - "debian10"
+      - "debian11"
+      - "ubuntu1804"
+      - "ubuntu2004"
+      - "ubuntu2204"
+      - "centos7"
+      - "centos-stream8"
+      - "amazonlinux"
+      - "rockylinux8"
+      - "almalinux8"

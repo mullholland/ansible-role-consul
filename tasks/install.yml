@@ -1,0 +1,18 @@
+---
+- name: Install consul
+  ansible.builtin.package:
+    name: "{{ consul_packages }}"
+    state: present
+
+- name: create consul directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    mode: "0750"
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    state: directory
+  with_items:
+    - "{{ consul_config_path }}"
+    - "{{ consul_data_path }}"
+    - "{{ consul_log_path }}"
+    - "{{ consul_run_path }}"

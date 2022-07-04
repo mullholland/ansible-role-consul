@@ -1,0 +1,126 @@
+---
+# Ansible managed
+
+name: "Ansible Molecule"
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '*.*'
+  pull_request:
+    types: [assigned]
+  schedule:
+    - cron: '5 3 3 * *'
+
+jobs:
+  linting:
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+      env:
+        command: "lint"
+        scenario: "default"
+        ansible: "current"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule lint
+        run: scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} command=${command} /opt/molecule.sh
+
+  "default_previous":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule test
+        run: scenario=default ansible=previous platform=${{ matrix.platform }} command=test /opt/molecule.sh
+
+  "default_current":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule test
+        run: scenario=default ansible=current platform=${{ matrix.platform }} command=test /opt/molecule.sh
+
+  "default_development":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule test
+        run: scenario=default ansible=development platform=${{ matrix.platform }} command=test /opt/molecule.sh
+
+  "cluster_previous":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule test
+        run: scenario=cluster ansible=previous platform=${{ matrix.platform }} command=test /opt/molecule.sh
+
+  "cluster_current":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule test
+        run: scenario=cluster ansible=current platform=${{ matrix.platform }} command=test /opt/molecule.sh
+
+  "cluster_development":
+    runs-on: ubuntu-20.04
+    needs:
+      - linting
+    container:
+      image: ghcr.io/mullholland/docker-molecule-shell:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: molecule test
+        run: scenario=cluster ansible=development platform=${{ matrix.platform }} command=test /opt/molecule.sh
