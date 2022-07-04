@@ -3,7 +3,41 @@
   hosts: all
   become: true
   gather_facts: true
-  # vars:
-  #   example_var: "value"
+  vars:
+    consul_config_sections:
+      - name: base
+        config: |
+          datacenter     = "dc1"
+          node_name      = "{{ inventory_hostname_short }}"
+          data_dir       = "{{ consul_data_path }}"
+          client_addr    = "{{ consul_bind_addr }}"
+          bind_addr      = "{{ consul_bind_addr }}"
+          advertise_addr = "{{ consul_bind_addr }}"
+      - name: UI
+        config: |
+          ui_config{
+            enabled = true
+          }
+      - name: server
+        config: |
+          server = {{ consul_server | lower }}
+          retry_join = ["{{ consul_bind_addr }}"]
+          bootstrap_expect = 3
+      - name: logging
+        config: |
+          log_level            = "INFO"
+          log_json             = false
+          log_file             = "{{ consul_log_path }}/consul.log"
+          # rotate after 24h
+          log_rotate_duration  = "24h"
+          # keep 1 week worth of logs
+          log_rotate_max_files = 7
+      - name: telementry
+        config: |
+          telemetry {
+            disable_hostname           = true
+            prometheus_retention_time  = "60s"
+          }
+
   roles:
     - role: "ansible-role-consul"

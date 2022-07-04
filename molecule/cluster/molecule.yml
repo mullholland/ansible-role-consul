@@ -8,7 +8,7 @@ lint: |
 driver:
   name: docker
 platforms:
-  - name: "${scenario:-default}-${ansible:-2.12}-${platform:-fedora35}-01"
+  - name: "${scenario:-default}-${ansible:-current}-${platform:-fedora35}-01"
     image: "${namespace:-ghcr.io/mullholland}/docker-molecule-${platform:-fedora35}"
     command: /sbin/init
     volumes:
@@ -19,7 +19,7 @@ platforms:
       - "consul_group"
     networks:
       - name: "consul_group"
-  - name: "${scenario:-default}-${ansible:-2.12}-${platform:-fedora35}-02"
+  - name: "${scenario:-default}-${ansible:-current}-${platform:-fedora35}-02"
     image: "${namespace:-ghcr.io/mullholland}/docker-molecule-${platform:-fedora35}"
     command: /sbin/init
     volumes:
@@ -30,7 +30,7 @@ platforms:
       - "consul_group"
     networks:
       - name: "consul_group"
-  - name: "${scenario:-default}-${ansible:-2.12}-${platform:-fedora35}-03"
+  - name: "${scenario:-default}-${ansible:-current}-${platform:-fedora35}-03"
     image: "${namespace:-ghcr.io/mullholland}/docker-molecule-${platform:-fedora35}"
     command: /sbin/init
     volumes:

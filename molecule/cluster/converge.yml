@@ -8,8 +8,8 @@
       - name: base
         config: |
           datacenter     = "dc1"
+          node_name      = "{{ inventory_hostname_short }}"
           data_dir       = "{{ consul_data_path }}"
-          name           = "{{ inventory_hostname }}"
           client_addr    = "{{ consul_bind_addr }}"
           bind_addr      = "{{ consul_bind_addr }}"
           advertise_addr = "{{ consul_bind_addr }}"
@@ -17,30 +17,28 @@
         config: |
           ui_config{
             enabled = true
-            metrics_provider = prometheus
-
           }
       - name: server
         config: |
-          server = {{ consul_server }}
-          #bootstrap_expect=3
-          #encrypt = ""
-          #retry_join = ["consul.domain.internal", "10.0.4.67"]
-          # or for example
-          #retry_join = [{% for server in groups['consul_group'] -%}
-          #  "{{ hostvars[server]['inventory_hostname'] }}"{{ ", " if not loop.last else "" }}
-          #{%- endfor -%} ]
+          server = {{ consul_server | lower }}
+          retry_join = [{% for server in groups['consul_group'] -%}
+            "{{ hostvars[server]['inventory_hostname'] }}"{{ ", " if not loop.last else "" }}
+          {%- endfor -%} ]
+          bootstrap_expect = 3
       - name: logging
         config: |
           log_level            = "INFO"
           log_json             = false
           log_file             = "{{ consul_log_path }}/consul.log"
-          log_rotate_duration  = "24h" # rotate after 24h
-          log_rotate_max_files = "7"   # keep 1 week worth of logs
+          # rotate after 24h
+          log_rotate_duration  = "24h"
+          # keep 1 week worth of logs
+          log_rotate_max_files = 7
       - name: telementry
         config: |
           telemetry {
-            prometheus_retention_time  = 60s
+            disable_hostname           = true
+            prometheus_retention_time  = "60s"
           }
 
 

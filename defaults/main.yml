@@ -16,7 +16,7 @@ consul_packages:
 # consul_license: "12345679987654321"
 
 # Bind addr
-consul_bind_addr: "{{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }}"
+consul_bind_addr: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"
 
 # Paths
 consul_bin_path: "/usr/bin"
@@ -45,6 +45,8 @@ consul_config_sections:
   - name: server
     config: |
       server = {{ consul_server | lower }}
+      retry_join = ["{{ consul_bind_addr }}"]
+      bootstrap_expect = 1
   - name: logging
     config: |
       log_level            = "INFO"

@@ -28,7 +28,7 @@ consul_packages:
 # consul_license: "12345679987654321"
 
 # Bind addr
-consul_bind_addr: "{{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }}"
+consul_bind_addr: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"
 
 # Paths
 consul_bin_path: "/usr/bin"
@@ -57,6 +57,8 @@ consul_config_sections:
   - name: server
     config: |
       server = {{ consul_server | lower }}
+      retry_join = ["{{ consul_bind_addr }}"]
+      bootstrap_expect = 1
   - name: logging
     config: |
       log_level            = "INFO"
@@ -88,8 +90,42 @@ This example is taken from `molecule/default/converge.yml` and is tested on each
   hosts: all
   become: true
   gather_facts: true
-  # vars:
-  #   example_var: "value"
+  vars:
+    consul_config_sections:
+      - name: base
+        config: |
+          datacenter     = "dc1"
+          node_name      = "{{ inventory_hostname_short }}"
+          data_dir       = "{{ consul_data_path }}"
+          client_addr    = "{{ consul_bind_addr }}"
+          bind_addr      = "{{ consul_bind_addr }}"
+          advertise_addr = "{{ consul_bind_addr }}"
+      - name: UI
+        config: |
+          ui_config{
+            enabled = true
+          }
+      - name: server
+        config: |
+          server = {{ consul_server | lower }}
+          retry_join = ["{{ consul_bind_addr }}"]
+          bootstrap_expect = 3
+      - name: logging
+        config: |
+          log_level            = "INFO"
+          log_json             = false
+          log_file             = "{{ consul_log_path }}/consul.log"
+          # rotate after 24h
+          log_rotate_duration  = "24h"
+          # keep 1 week worth of logs
+          log_rotate_max_files = 7
+      - name: telementry
+        config: |
+          telemetry {
+            disable_hostname           = true
+            prometheus_retention_time  = "60s"
+          }
+
   roles:
     - role: "mullholland.consul"
 ```
@@ -140,8 +176,6 @@ This role has been tested on these [container images](https://hub.docker.com/u/m
 -   [ubuntu2204](https://hub.docker.com/r/mullholland/docker-molecule-ubuntu2204)
 -   [centos7](https://hub.docker.com/r/mullholland/docker-molecule-centos7)
 -   [centos-stream8](https://hub.docker.com/r/mullholland/docker-molecule-centos-stream8)
--   [fedora35](https://hub.docker.com/r/mullholland/docker-molecule-fedora35)
--   [fedora36](https://hub.docker.com/r/mullholland/docker-molecule-fedora36)
 -   [amazonlinux](https://hub.docker.com/r/mullholland/docker-molecule-amazonlinux)
 -   [rockylinux8](https://hub.docker.com/r/mullholland/docker-molecule-rockylinux8)
 -   [almalinux8](https://hub.docker.com/r/mullholland/docker-molecule-almalinux8)
@@ -152,6 +186,10 @@ The minimum version of Ansible required is 2.10, tests have been done to:
 -   The current version.
 -   The [devel](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-devel-from-github-with-pip) version.
 
+This Role has the following additional molecule test scenarios:
+-   cluster
+
+Details can be found in ```molecule/```
 
 
 
