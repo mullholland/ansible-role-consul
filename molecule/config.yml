@@ -10,9 +10,12 @@ molecule_scenarios:
       - "ubuntu2204"
       - "centos7"
       - "centos-stream8"
+      - "centos-stream9"
       - "amazonlinux"
       - "rockylinux8"
+      - "rockylinux9"
       - "almalinux8"
+      - "almalinux9"
   - scenario: "cluster"
     ansible: ["previous", "current"]
     platforms:
@@ -23,6 +26,9 @@ molecule_scenarios:
       - "ubuntu2204"
       - "centos7"
       - "centos-stream8"
+      - "centos-stream9"
       - "amazonlinux"
       - "rockylinux8"
+      - "rockylinux9"
       - "almalinux8"
+      - "almalinux9"

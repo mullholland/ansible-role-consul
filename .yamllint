@@ -1,5 +1,5 @@
 ---
-# managed by ansible-role-doc-generator
+# managed by ansible-generator
 extends: default
 
 rules:

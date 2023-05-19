@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -70,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -86,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
     steps:
       - name: checkout
         uses: actions/checkout@v3

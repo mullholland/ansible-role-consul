@@ -35,7 +35,7 @@ linting:
     - if: $CI_COMMIT_REF_NAME == "main"
   parallel:
     matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
   script:
     - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
 
@@ -50,7 +50,7 @@ linting:
     - if: $CI_COMMIT_REF_NAME == "main"
   parallel:
     matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
   script:
     - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
 
@@ -65,7 +65,7 @@ linting:
     - if: $CI_COMMIT_REF_NAME == "main"
   parallel:
     matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
   script:
     - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
 
@@ -80,6 +80,6 @@ linting:
     - if: $CI_COMMIT_REF_NAME == "main"
   parallel:
     matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, centos-stream9, amazonlinux, rockylinux8, rockylinux9, almalinux8, almalinux9]  # yamllint disable-line rule:line-length
   script:
     - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"

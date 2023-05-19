@@ -176,9 +176,12 @@ This role has been tested on these [container images](https://hub.docker.com/u/m
 -   [ubuntu2204](https://hub.docker.com/r/mullholland/docker-molecule-ubuntu2204)
 -   [centos7](https://hub.docker.com/r/mullholland/docker-molecule-centos7)
 -   [centos-stream8](https://hub.docker.com/r/mullholland/docker-molecule-centos-stream8)
+-   [centos-stream9](https://hub.docker.com/r/mullholland/docker-molecule-centos-stream9)
 -   [amazonlinux](https://hub.docker.com/r/mullholland/docker-molecule-amazonlinux)
 -   [rockylinux8](https://hub.docker.com/r/mullholland/docker-molecule-rockylinux8)
+-   [rockylinux9](https://hub.docker.com/r/mullholland/docker-molecule-rockylinux9)
 -   [almalinux8](https://hub.docker.com/r/mullholland/docker-molecule-almalinux8)
+-   [almalinux9](https://hub.docker.com/r/mullholland/docker-molecule-almalinux9)
 
 The minimum version of Ansible required is 2.10, tests have been done to:
 

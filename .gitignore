@@ -1,4 +1,4 @@
-# managed by ansible-role-doc-generator
+# managed by ansible-generator
 ### Ansible ###
 *.retry
 
