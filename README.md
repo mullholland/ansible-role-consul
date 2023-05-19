@@ -1,5 +1,8 @@
 # [consul](#consul)
 
+This role will no longer be updated. you can use [robertdebock/ansible-role-consul](https://github.com/robertdebock/ansible-role-consul) as an alternative.
+
+
 |GitHub|GitLab|
 |------|------|
 |[![github](https://github.com/mullholland/ansible-role-consul/workflows/Ansible%20Molecule/badge.svg)](https://github.com/mullholland/ansible-role-consul/actions)|[![gitlab](https://gitlab.com/mullholland/ansible-role-consul/badges/main/pipeline.svg)](https://gitlab.com/mullholland/ansible-role-consul)|
