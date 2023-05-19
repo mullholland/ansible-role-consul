@@ -1,7 +1,9 @@
 # [consul](#consul)
 
+**IMPORTANT**
 This role will no longer be updated. you can use [robertdebock/ansible-role-consul](https://github.com/robertdebock/ansible-role-consul) as an alternative.
 
+---
 
 |GitHub|GitLab|
 |------|------|
