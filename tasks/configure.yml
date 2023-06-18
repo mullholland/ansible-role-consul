@@ -1,5 +1,5 @@
 ---
-- name: place consul license
+- name: configure | Place consul license
   ansible.builtin.copy:
     content: "{{ consul_license }}"
     dest: "/etc/consul.d/consul.hclic"
@@ -11,7 +11,7 @@
   when:
     - consul_license is defined
 
-- name: "create /etc/consul.d/consul.hcl"
+- name: configure | Create /etc/consul.d/consul.hcl
   ansible.builtin.template:
     src: "etc/consul.d/consul.hcl.j2"
     dest: "/etc/consul.d/consul.hcl"
@@ -21,7 +21,7 @@
   notify:
     - restart consul
 
-- name: start consul
+- name: configure | start consul
   ansible.builtin.service:
     name: consul
     state: started

@@ -1,23 +1,27 @@
 ---
+#
+# Ansible managed
+#
 dependency:
   name: galaxy
+  options:
+    role-file: requirements.yml
+    requirements-file: requirements.yml
 lint: |
   set -e
   yamllint .
-  ansible-lint .
+  ansible-lint
 driver:
   name: docker
 platforms:
-  - name: "${scenario:-default}-${ansible:-2.12}-${platform:-fedora35}"
-    image: "${namespace:-ghcr.io/mullholland}/docker-molecule-${platform:-fedora35}"
+  - name: "consul-${image:-fedora}-${tag:-latest}${TOX_ENVNAME}"
+    image: "${namespace:-mullholland}/docker-${image:-fedora}-systemd:${tag:-latest}"
     command: /sbin/init
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: true
-    pre_build_image: true
+    privileged: yes
+    pre_build_image: yes
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_ASYNC_DIR: /tmp/.ansible_async
 verifier:
   name: ansible

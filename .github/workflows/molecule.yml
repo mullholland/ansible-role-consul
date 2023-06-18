@@ -1,94 +1,88 @@
 ---
+#
 # Ansible managed
+#
 
-name: "Ansible Molecule"
+name: Ansible Molecule
 
 on:
   push:
-    branches:
-      - '**'
-    tags-ignore:
-      - '*.*'
+    tags_ignore:
+      - '*'
   pull_request:
-    types: [assigned]
   schedule:
     - cron: '5 3 3 * *'
 
+# If a 403 error occurs, make sure to set content permission to write
+# see: https://github.com/go-semantic-release/action/issues/27
+permissions:
+  contents: write
+
 jobs:
-  linting:
+  lint:
     runs-on: ubuntu-20.04
-    container:
-      image: ghcr.io/mullholland/docker-molecule-shell:latest
-      env:
-        command: "lint"
-        scenario: "default"
-        ansible: "current"
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - name: molecule lint
-        run: scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} command=${command} /opt/molecule.sh
-
-  "default_previous":
-    runs-on: ubuntu-20.04
+      - name: ansible-lint
+        uses: ansible-community/ansible-lint-action@main
+  test:
     needs:
-      - linting
-    container:
-      image: ghcr.io/mullholland/docker-molecule-shell:latest
+      - lint
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+        config:
+          - image: "centos"
+            tag: "7"
+          - image: "centos"
+            tag: "8"
+          - image: "centos"
+            tag: "latest"
+          - image: "amazonlinux"
+            tag: "2"
+          - image: "fedora"
+            tag: "36"
+          - image: "fedora"
+            tag: "latest"
+          - image: "fedora"
+            tag: "rawhide"
+          - image: "ubuntu"
+            tag: "latest"
+          - image: "ubuntu"
+            tag: "focal"
+          - image: "ubuntu"
+            tag: "bionic"
+          - image: "debian"
+            tag: "latest"
+          - image: "debian"
+            tag: "bookworm"
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - name: molecule test
-        run: scenario=default ansible=previous platform=${{ matrix.platform }} command=test /opt/molecule.sh
+        with:
+          path: "${{ github.repository }}"
+      - name: disable apparmor for mysql
+        run: sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+      - name: parse apparmor for mysql
+        run: sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+      - name: molecule
+        uses: robertdebock/molecule-action@5.0.2
+        with:
+          namespace: mullholland
+          image: ${{ matrix.config.image }}
+          tag: ${{ matrix.config.tag }}
 
-  "default_current":
-    runs-on: ubuntu-20.04
+  release:
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs:
-      - linting
-    container:
-      image: ghcr.io/mullholland/docker-molecule-shell:latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
+      - test
+    runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: molecule test
-        run: scenario=default ansible=current platform=${{ matrix.platform }} command=test /opt/molecule.sh
-
-  "cluster_previous":
-    runs-on: ubuntu-20.04
-    needs:
-      - linting
-    container:
-      image: ghcr.io/mullholland/docker-molecule-shell:latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: molecule test
-        run: scenario=cluster ansible=previous platform=${{ matrix.platform }} command=test /opt/molecule.sh
-
-  "cluster_current":
-    runs-on: ubuntu-20.04
-    needs:
-      - linting
-    container:
-      image: ghcr.io/mullholland/docker-molecule-shell:latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: molecule test
-        run: scenario=cluster ansible=current platform=${{ matrix.platform }} command=test /opt/molecule.sh
+      - uses: actions/checkout@v3
+      - uses: go-semantic-release/action@v1
+        id: semrel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          changelog-generator-opt: "emojis=true"

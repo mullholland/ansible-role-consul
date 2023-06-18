@@ -1,10 +1,10 @@
 ---
-- name: Install consul
+- name: install | itemnstall consul
   ansible.builtin.package:
     name: "{{ consul_packages }}"
     state: present
 
-- name: create consul directories
+- name: install | create consul directories
   ansible.builtin.file:
     path: "{{ item }}"
     mode: "0750"

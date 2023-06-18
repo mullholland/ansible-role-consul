@@ -19,7 +19,6 @@ consul_packages:
 consul_bind_addr: "{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}"
 
 # Paths
-consul_bin_path: "/usr/bin"
 consul_config_path: "/etc/consul.d"
 consul_data_path: "/opt/consul/data"
 consul_log_path: "/var/log/consul"
@@ -62,7 +61,3 @@ consul_config_sections:
         disable_hostname           = true
         prometheus_retention_time  = "60s"
       }
-
-consul_config_services:
-  - name: web
-    config:

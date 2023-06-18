@@ -1,4 +1,0 @@
----
-# Install a role from Ansible Galaxy.
-roles:
-  - src: mullholland.repository_hashicorp

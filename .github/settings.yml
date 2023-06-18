@@ -1,0 +1,8 @@
+---
+#
+# Ansible managed
+#
+repository:
+  description: Install and configure hashicorp consul
+  homepage: https://mullholland.net
+  topics: cloud, system, ansible, molecule, tox, playbook
