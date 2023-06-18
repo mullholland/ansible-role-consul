@@ -8,10 +8,10 @@
 profile: production
 
 exclude_paths:
-  - ./molecule/default/prepare.yml
-  - ./molecule/default/converge.yml
-  - ./molecule/default/verify.yml
-  - ./molecule/default/collections.yml
+  - ./molecule/**/prepare.yml
+  - ./molecule/**/converge.yml
+  - ./molecule/**/verify.yml
+  - ./molecule/**/collections.yml
   - ./.tox
   - ./.cache
   - ./.github
