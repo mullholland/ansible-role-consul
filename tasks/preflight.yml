@@ -1,11 +1,11 @@
 ---
-- name: select leader if nomad_leader is unset
+- name: preflight | Select leader if nomad_leader is unset
   ansible.builtin.set_fact:
     consul_leader: "{{ inventory_hostname }}"
   run_once: true
   when:
     - consul_leader is not defined
 
-- name: print elected leader
+- name: preflight | Print elected leader
   ansible.builtin.debug:
     msg: "{{ consul_leader }}"

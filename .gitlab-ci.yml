@@ -1,85 +1,44 @@
 ---
-image: "ghcr.io/mullholland/docker-molecule-shell:latest"
-
-services:
-  - docker:dind
-
-stages:
-  - linting
-  - "default-previous"
-  - "default-current"
-  - "cluster-previous"
-  - "cluster-current"
+image: "robertdebock/github-action-molecule:5.0.2"
 
 variables:
-  DOCKER_HOST: "tcp://docker:2375"
   PY_COLORS: 1
-  ANSIBLE_FORCE_COLOR: 1
 
-linting:
-  stage: linting
-  variables:
-    COMMAND: "lint"
+molecule:
   script:
-    - "command=${COMMAND} /opt/molecule.sh"
-
-
-"default-previous":
-  needs:
-    - "linting"
-  stage: "default-previous"
-  variables:
-    SCENARIO: "default"
-    ANSIBLE: "previous"
+    - if [ -f tox.ini ] ; then tox ; fi
+    - if [ ! -f tox.ini ] ; then molecule test ; fi
   rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
+    - if: $CI_COMMIT_REF_NAME == "master"
   parallel:
     matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
-  script:
-    - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
+      - image: "centos"
+        tag: "7"
+      - image: "centos"
+        tag: "8"
+      - image: "centos"
+        tag: "latest"
+      - image: "amazonlinux"
+        tag: "2"
+      - image: "fedora"
+        tag: "36"
+      - image: "fedora"
+        tag: "latest"
+      - image: "fedora"
+        tag: "rawhide"
+      - image: "ubuntu"
+        tag: "latest"
+      - image: "ubuntu"
+        tag: "focal"
+      - image: "ubuntu"
+        tag: "bionic"
+      - image: "debian"
+        tag: "latest"
+      - image: "debian"
+        tag: "bookworm"
 
-"default-current":
-  needs:
-    - "linting"
-  stage: "default-current"
-  variables:
-    SCENARIO: "default"
-    ANSIBLE: "current"
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
-  parallel:
-    matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
-  script:
-    - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
-
-"cluster-previous":
-  needs:
-    - "linting"
-  stage: "cluster-previous"
-  variables:
-    SCENARIO: "cluster"
-    ANSIBLE: "previous"
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
-  parallel:
-    matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
-  script:
-    - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
-
-"cluster-current":
-  needs:
-    - "linting"
-  stage: "cluster-current"
-  variables:
-    SCENARIO: "cluster"
-    ANSIBLE: "current"
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "main"
-  parallel:
-    matrix:
-      - PLATFORM: [debian10, debian11, ubuntu1804, ubuntu2004, ubuntu2204, centos7, centos-stream8, amazonlinux, rockylinux8, almalinux8]  # yamllint disable-line rule:line-length
-  script:
-    - "scenario=${SCENARIO} ansible=${ANSIBLE} platform=${PLATFORM} /opt/molecule.sh"
+# galaxy:
+#   script:
+#     - ansible-galaxy role import --api-key ${GALAXY_API_KEY} mullholland ${CI_PROJECT_NAME}
+#   rules:
+#     - if: $CI_COMMIT_TAG != null
