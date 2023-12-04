@@ -186,7 +186,7 @@ This role has been tested on these [container images](https://hub.docker.com/u/m
 |---------|----|
 |[EL](https://hub.docker.com/r/mullholland/enterpriselinux)|all|
 |[Amazon](https://hub.docker.com/r/mullholland/amazonlinux)|Candidate|
-|[Fedora](https://hub.docker.com/r/mullholland/fedora/)|all|
+|[Fedora](https://hub.docker.com/r/mullholland/fedora/)|38, 39|
 |[Ubuntu](https://hub.docker.com/r/mullholland/ubuntu)|all|
 |[Debian](https://hub.docker.com/r/mullholland/debian)|all|
 
