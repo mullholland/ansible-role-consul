@@ -3,7 +3,7 @@
 # Ansible managed
 #
 
-name: Ansible Molecule
+name: Molecule
 
 on:
   push:
@@ -13,17 +13,12 @@ on:
   schedule:
     - cron: '5 3 3 * *'
 
-# If a 403 error occurs, make sure to set content permission to write
-# see: https://github.com/go-semantic-release/action/issues/27
-permissions:
-  contents: write
-
 jobs:
   lint:
     runs-on: ubuntu-20.04
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: ansible-lint
         uses: ansible-community/ansible-lint-action@main
   test:
@@ -43,7 +38,7 @@ jobs:
           - image: "amazonlinux"
             tag: "2"
           - image: "fedora"
-            tag: "36"
+            tag: "38"
           - image: "fedora"
             tag: "latest"
           - image: "fedora"
@@ -57,32 +52,19 @@ jobs:
           - image: "debian"
             tag: "latest"
           - image: "debian"
-            tag: "bookworm"
+            tag: "bullseye"
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: "${{ github.repository }}"
-      - name: disable apparmor for mysql
-        run: sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-      - name: parse apparmor for mysql
-        run: sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+      # - name: disable apparmor for mysql
+      #   run: sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+      # - name: parse apparmor for mysql
+      #   run: sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
       - name: molecule
-        uses: robertdebock/molecule-action@5.0.2
+        uses: robertdebock/molecule-action@6.0.1
         with:
           namespace: mullholland
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}
-
-  release:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs:
-      - test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: go-semantic-release/action@v1
-        id: semrel
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          changelog-generator-opt: "emojis=true"
